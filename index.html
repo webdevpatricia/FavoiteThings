@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite Things</title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<div class="container">
+		<h1>My Favorite Things</h1>
+	  	<div id="favorites-view"></div>
+
+    <!-- Rendered Buttons will get Dumped Here  -->
+    	<div id="buttons-view"></div>
+
+		<form id="favorite-form">
+	      <label for="favorite-input">Add one of your favorite things</label>
+	      <input type="text" id="favorite-input"><br>
+
+	      <!-- Button triggers new favorite to be added -->
+	      <input id="add-favorite" type="submit" value="Add a Favorite">
+	    </form>
+
+    	<script type="text/javascript" src="assets/js/favorite.js"></script>
+
+	</div>
+</body>
+</html>
