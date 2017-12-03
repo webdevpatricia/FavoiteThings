@@ -1,23 +1,51 @@
 
 	$(document).ready(function(){
 
+  // initial favorite items array
+	var favorites = ["flowers", "succulents", "painting", "cats"];
+  // container for the still picture url
+  var picStill = "";
+  // container for the animated picture url
+  var picAnimated = "";
 
-	var favorites = ["flowers", "succlents", "painting", "cats"];
-
+  // function that gets the giphy object and displays it in an image tag
 	function displayFavoriteInfo() {
-
+        //setting the local variable favorite to the data name attribute
         var favorite = $(this).attr("data-name");
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + favorite + "&apikey=rxWvTqyXRenUfYmNhZXOexgXgY3zoUun";
-
+        //creating the query URL to return the giphy objects
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + favorite + "&apikey=rxWvTqyXRenUfYmNhZXOexgXgY3zoUun&limit=10&rating=g";
+        //making the call to giphy with ajax
         $.ajax({
           url: queryURL,
           method: "GET"
         }).done(function(response) {
-        	$("#favorites-view").JSON(response);
-          renderButtons();
-        });
-      }
+        	console.log(response);
+        	//loop through the response to get the urls for the pictures
+        	for(var i = 0; i < response.data.length; i++){
+          	// assign the still version of the gif 
+          	picStill = JSON.stringify(response.data[i].images.downsized_still.url);
+                        // assign the animated version of the gif
+          	picAnimated = JSON.stringify(response.data[i].images.downsized.url);
+            
+            // make the first display of the gif still
+            $("#favorites-view").prepend('<img class="theImg" src=' + picStill +'/>');
+            // if image is clicked toggle it to the gif that is not currently being displayed
+            $(".theImg").on("click", function() {
+              console.log(this.src);
+              if(this.src === '"' + picStill +'"'){
+                $("#favorites-view").replaceWith('<img class="theImg" src=' + picAnimated +'/>')
+              } else { 
+                $("#favorites-view").replaceWith('<img class="theImg" src=' + picStill +'/>')
+              };
 
+        	 	});
+        	}
+
+        	});
+
+         renderButtons();
+        };
+      
 
       // Function for displaying favorites data
       function renderButtons() {
@@ -60,9 +88,20 @@
       });
 
 
+ // This function toggles the gif animation when the gif is clicked
+ 	// function toggle_animation(id) {
+  //      var e = document.getElementById(#favorites-view);
+
+  //      if(e.style.display == 'block')
+  //         e.style.display = 'none';
+  //      else
+  //         e.style.display = 'block';
+  //   }
+
+
 
   // Function for displaying the favorites info
-  // Using $(document).on instead of $(".movie").on to add event listens to dynamically generated elements
+  // Using $(document).on instead of $(".favorite").on to add event listens to dynamically generated elements
       $(document).on("click", ".favorite", displayFavoriteInfo);
 
       // Calling the renderButtons function to display the intial buttons
