@@ -13,7 +13,7 @@
         //setting the local variable favorite to the data name attribute
         var favorite = $(this).attr("data-name");
         //creating the query URL to return the giphy objects
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + favorite + "&apikey=rxWvTqyXRenUfYmNhZXOexgXgY3zoUun&limit=10&rating=g";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + favorite + "&apikey=rxWvTqyXRenUfYmNhZXOexgXgY3zoUun&limit=10&rating=g";
         //making the call to giphy with ajax
         $.ajax({
           url: queryURL,
@@ -25,6 +25,7 @@
           	// assign the still version of the gif 
           	picStill = JSON.stringify(response.data[i].images.downsized_still.url);
                         // assign the animated version of the gif
+
           	picAnimated = JSON.stringify(response.data[i].images.downsized.url);
             
             // make the first display of the gif still
