@@ -3,110 +3,76 @@
 
   // initial favorite items array
 	var favorites = ["flowers", "succulents", "painting", "cats"];
-  // container for the still picture url
-  var picStill = "";
-  // container for the animated picture url
-  var picAnimated = "";
+
 
   // function that gets the giphy object and displays it in an image tag
-	function displayFavoriteInfo() {
-        //setting the local variable favorite to the data name attribute
+    	function displayFavoriteInfo() {
+        $("#favorites-view").empty();
         var favorite = $(this).attr("data-name");
-        //creating the query URL to return the giphy objects
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + favorite + "&apikey=rxWvTqyXRenUfYmNhZXOexgXgY3zoUun&limit=10&rating=g";
-        //making the call to giphy with ajax
+        console.log(favorite);
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + favorite + "&apikey=rxWvTqyXRenUfYmNhZXOexgXgY3zoUun&limit=10";
+        console.log(queryURL);
         $.ajax({
           url: queryURL,
           method: "GET"
         }).done(function(response) {
         	console.log(response);
-        	//loop through the response to get the urls for the pictures
         	for(var i = 0; i < response.data.length; i++){
-          	// assign the still version of the gif 
-          	picStill = JSON.stringify(response.data[i].images.downsized_still.url);
-                        // assign the animated version of the gif
+            picRating = JSON.stringify(response.data[i].rating).replace(/^"(.*)"$/, '$1');
+            picStill = JSON.stringify(response.data[i].images.downsized_still.url).replace(/^"(.*)"$/, '$1');
+           	picAnimated = JSON.stringify(response.data[i].images.downsized.url).replace(/^"(.*)"$/, '$1');
+            var imgTag = $("<img>");
 
-          	picAnimated = JSON.stringify(response.data[i].images.downsized.url);
-            
-            // make the first display of the gif still
-            $("#favorites-view").prepend('<img class="theImg" src=' + picStill +'/>');
-            // if image is clicked toggle it to the gif that is not currently being displayed
-            $(".theImg").on("click", function() {
-              console.log(this.src);
-              if(this.src === '"' + picStill +'"'){
-                $("#favorites-view").replaceWith('<img class="theImg" src=' + picAnimated +'/>')
-              } else { 
-                $("#favorites-view").replaceWith('<img class="theImg" src=' + picStill +'/>')
-              };
-
-        	 	});
-        	}
-
-        	});
-
-         renderButtons();
-        };
+            console.log(imgTag.src);
+            imgTag.addClass("theImg");
+            imgTag.attr("data-still", picStill);
+            imgTag.attr("data-animate", picAnimated);
+            imgTag.attr("data-state", "still");
+            $("#favorites-view").prepend(imgTag);
+          }
+       	});
+           renderButtons();
+      };
       
+      //This function toggles between the still picture and the animated picture
+      $(".theImg").on("click", function() {
+          var state = $(this).attr("data-state");
+          console.log(state);
+          if (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+          } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+          }
+      });
+     
 
-      // Function for displaying favorites data
+      // Function for displaying favorites buttons
       function renderButtons() {
-
-        // Deleting the buttons prior to adding new favorites
-        // (this is necessary otherwise you will have repeat buttons)
         $("#buttons-view").empty();
-
-        // Looping through the array of movies
         for (var i = 0; i < favorites.length; i++) {
-
-          // Then dynamicaly generating buttons for each favorite in the array
-          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
           var a = $("<button>");
-          // Adding a class of favorite to our button
           a.addClass("favorite");
-          // Adding a data-attribute
           a.attr("data-name", favorites[i]);
-          // Providing the initial button text
           a.text(favorites[i]);
-          // Adding the button to the buttons-view div
           $("#buttons-view").append(a);
         }
-      }
+      };
 
-// This function handles events where one button is clicked
+      // This function handles events where one button is clicked
       $("#add-favorite").on("click", function(event) {
         event.preventDefault();
-
-        // This line grabs the input from the textbox
         var favorite = $("#favorite-input").val();
         console.log(favorite);
-
-        // Adding the favorite from the textbox to our array
         favorites.push(favorite);
         console.log(favorites)
-
-        // Calling renderButtons which handles the processing of our favorites array
         renderButtons();
       });
 
 
- // This function toggles the gif animation when the gif is clicked
- 	// function toggle_animation(id) {
-  //      var e = document.getElementById(#favorites-view);
+     $(document).on("click", ".favorite", displayFavoriteInfo);
+     // $(document).on("click", ".theImg", displayFavoriteInfo);
 
-  //      if(e.style.display == 'block')
-  //         e.style.display = 'none';
-  //      else
-  //         e.style.display = 'block';
-  //   }
-
-
-
-  // Function for displaying the favorites info
-  // Using $(document).on instead of $(".favorite").on to add event listens to dynamically generated elements
-      $(document).on("click", ".favorite", displayFavoriteInfo);
-
-      // Calling the renderButtons function to display the intial buttons
       renderButtons();
-    
-
     });

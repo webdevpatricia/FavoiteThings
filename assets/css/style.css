@@ -1,0 +1,16 @@
+h1 {
+	color: #172768;
+	size: 60px;
+}
+
+/*.favorite {
+	margin: 50px, 100px, 50px, 0px;
+}*/
+
+.container{
+	height: 1200px;
+}
+
+body{
+	background-color: lightblue;
+}
